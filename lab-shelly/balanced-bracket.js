@@ -1,95 +1,132 @@
 'use strict';
 
 const Stack = require('./lib/stack');
-
 let braceStack = new Stack;
 let parenStack = new Stack;
 let squiggleStack = new Stack;
 
-let testStr = '[[{()}]][';
-
-function findOpeners(string) {
-  for(let i = 0; i < string.length; i++) {
-    if(string.charAt(i) === '[') {
-      braceStack.push(string[i]);
-    }
-    if(string.charAt(i) === '(') {
-      parenStack.push(string[i]);
-    }
-    if(string.charAt(i) === '{') {
-      squiggleStack.push(string[i]);
-    }
-  }
-}
+let testStr = '[][';
 
 function removeOpeners(string) {
+
+  _findOpeners(testStr);
+
   for(let i = 0; i < string.length; i ++) {
+
     if(string.charAt(i) === ']') {
       try {
         braceStack.pop();
       } catch(err) {
-        throw new Error('missing opening brace');
+        throw new Error('missing matching opening brace');
       }
-
     }
+
     if(string.charAt(i) === ')') {
       try {
         parenStack.pop();
       } catch(err) {
-        throw new Error('missing opening parens');
+        throw new Error('missing matching opening parens');
       }
     }
+
     if(string.charAt(i) === '}') {
       try {
         squiggleStack.pop();
       } catch(err) {
-        throw new Error('missing opening squiggle');
+        throw new Error('missing matching opening squiggle');
       }
     }
   }
-  if(braceStack.peek() !== null) {
-    throw new Error('missing closing brace');
+
+  if(braceStack.head !== null) {
+    throw new Error('missing matching closing brace');
   }
-  if(parenStack.peek() !== null) {
-    throw new Error('missing closing parens');
+  if(parenStack.head !== null) {
+    throw new Error('missing matching closing parens');
   }
-  if(squiggleStack.peek() !== null) {
-    throw new Error('missing closing squiggle');
+  if(squiggleStack.head !== null) {
+    throw new Error('missing matching closing squiggle');
+  }
+
+  function _findOpeners(string) {
+    for(let i = 0; i < string.length; i++) {
+      if(string.charAt(i) === '[') {
+        braceStack.push(string[i]);
+      }
+      if(string.charAt(i) === '(') {
+        parenStack.push(string[i]);
+      }
+      if(string.charAt(i) === '{') {
+        squiggleStack.push(string[i]);
+      }
+    }
   }
 }
-
-findOpeners(testStr);
 removeOpeners(testStr);
+
+// function myLinter(string) {
 //
-// function findBracket(string) {
+//   for(let i = 0; i <string.length; i ++) {
 //
-//   for(let i = 0; i < string.length; i++) {
+//     if(string.charAt(i) === '[' || string.charAt(i) === '{' ||  string.charAt(i) === '(') {
+//       openerStack.push(string[i]);
 //
-//     if(string.charAt(i) === '[') {
-//       myStack.push(string[i]);
-//       //if nothing in the stack, then head = null;
 //     }
-//     if(string.charAt(i) === ']') {
 //
-//       try {
+//     if(string.charAt(i) === ']' || string.charAt(i) === '}' || string.charAt(i) === ')') {
 //
-//         myStack.pop();
+//       let stackTop = openerStack.peek();
+//       let current = string.charAt(i);
+//       console.log('waht is current: ', current);
+//       console.log('waht is top:', stackTop);
+//       // console.log(string.charAt(i));
+//       // console.log('stackTop: ', stackTop);
+//       // console.log('current closer: ', current);
 //
-//       } catch(err) {
+//       if (stackTop === '[' && current === ']') {
+//         openerStack.pop();
+//         // console.log('pop : ', openerStack);
 //
-//         console.log('missing opening');
-//         return err;
+//         if(openerStack === null) {
+//           return openerStack;
+//         }
 //       }
-//       //deal with empty stack?
-//       // console.log('whats in the stack: ', myStack);
-//       // myStack.pop();
+//
+//       if (stackTop === '{' && current === '}') {
+//         openerStack.pop();
+//         console.log('inside {}');
+//       }
+//
+//       if (stackTop === '(' && current === ')') {
+//         openerStack.pop();
+//         console.log('inside ()');
+//       }
+//
+//       else {
+//         throw new Error('Missing matching opener');
+//       }
+//       // if(openerStack === null) {
+//       //   throw new Error('Missing matching opener');
+//       // }
 //     }
-//     // return myStack;
 //   }
-//   // if(myStack.head === null) console.log('SUCCESSSS!!!');
-//   // if(myStack.head !== null) console.log('LINT ISSUE');
-//   console.log('wahts in the stack still: ', myStack);
-//   console.log('what is the head????', myStack.head);
+//
+//   if(openerStack !== null) {
+//     throw new Error('Missing matching closer');
+//   }
+//   return openerStack;
 // }
 //
-// findBracket(bracketStr);
+// myLinter(testStr);
+//
+
+// function _findOpeners(string) {
+//   for(let i = 0; i < string.length; i++) {
+//     if(string.charAt(i) === '[' || string.charAt(i) === '{' ||  string.charAt(i) === '(') {
+//       openerStack.push(string[i]);
+//     }
+//   }
+// }
+// _findOpeners(testStr);
+//
+// console.log('whats here', openerStack);
