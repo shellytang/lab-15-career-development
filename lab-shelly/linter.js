@@ -4,7 +4,7 @@
 
 const Stack = require('./lib/stack');
 let openerStack = new Stack();
-// let testString = '[]{}()';
+
 const Linter = module.exports = function(string) {
 
   for(let i = 0; i <string.length; i ++) {
@@ -14,7 +14,6 @@ const Linter = module.exports = function(string) {
 
     if(string.charAt(i) === ']' || string.charAt(i) === '}' || string.charAt(i) === ')') {
       if(openerStack.head === null) {
-        // console.error('Missing matching opener');
         return false;
       }
 
@@ -25,12 +24,8 @@ const Linter = module.exports = function(string) {
       }
     }
   }
-
   if(openerStack.head !== null) {
-    // console.error('Missing matching closer');
     return false;
   }
-  // console.log('success');
   return true;
 };
-// Linter(testString);
